@@ -31,7 +31,8 @@
     "@nestjs/config": "^4.0.2",
     "zod": "^3.25.76",
     "bullmq": "^5.58.0",
-    "ioredis": "^5.7.0"
+    "ioredis": "^5.7.0",
+    "@prisma/client": "^6.16.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
