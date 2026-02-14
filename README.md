@@ -4,6 +4,9 @@ This repo contains the MVP code skeleton.
 
 - API: NestJS (apps/api)
 - DB: Prisma schema + migrations (packages/db)
+  - Orders: status + append-only status transitions
+  - Ledger: append-only wallet entries
+  - Provider audit: append-only request/response payloads (redaction at app layer)
 - Local deps: Postgres + Redis via docker compose (infra/docker-compose.yml)
 - Admin: Retool (out of repo)
 

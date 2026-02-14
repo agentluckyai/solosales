@@ -25,6 +25,11 @@ enum OrderStatus {
   FAILED
 }
 
+enum ProviderAuditDirection {
+  REQUEST
+  RESPONSE
+}
+
 enum LedgerEntryType {
   TOPUP
   GIFT
@@ -97,9 +102,45 @@ model Order {
   updatedAt         DateTime     @updatedAt
 
   emailSequences    EmailSequence[]
+  statusHistory     OrderStatusTransition[]
+  providerAudits    ProviderAudit[]
 
   @@index([userId, createdAt])
   @@index([status])
+}
+
+// Append-only order status transitions (state machine history)
+model OrderStatusTransition {
+  id         String      @id @default(cuid())
+  orderId    String
+  order      Order       @relation(fields: [orderId], references: [id])
+  fromStatus OrderStatus?
+  toStatus   OrderStatus
+  reason     String?
+  meta       Json?
+  createdAt  DateTime    @default(now())
+
+  @@index([orderId, createdAt])
+  @@index([toStatus])
+}
+
+// Provider request/response audit trail (append-only)
+model ProviderAudit {
+  id            String                 @id @default(cuid())
+  orderId       String?
+  order         Order?                 @relation(fields: [orderId], references: [id])
+  provider      String                 // e.g., "sendgrid", "openai", "apollo"
+  operation     String                 // e.g., "send_email", "enrich_company"
+  direction     ProviderAuditDirection // REQUEST|RESPONSE
+  requestId     String?                // idempotency key / provider correlation id
+  statusCode    Int?
+  error         String?
+  payload       Json                   // request/response body (redaction happens at app layer)
+  createdAt     DateTime               @default(now())
+
+  @@index([provider, operation, createdAt])
+  @@index([requestId])
+  @@index([orderId, createdAt])
 }
 
 // Email nurture skeleton
