@@ -1,0 +1,133 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// --- MVP core tables (minimal skeleton; will expand) ---
+
+enum OrderStatus {
+  CREATED
+  PLANNED
+  MINING
+  ENRICHMENT
+  NURTURE
+  INITIAL_LIST
+  SCORING
+  QUALITY_GATE
+  QUALIFIED_LIST
+  DELIVERED
+  CLOSED
+  PAUSED
+  FAILED
+}
+
+enum LedgerEntryType {
+  TOPUP
+  GIFT
+  FREEZE
+  DEDUCT
+  RELEASE
+  REFUND
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  wallet    Wallet?
+  orders    Order[]
+}
+
+model Wallet {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  entries   LedgerEntry[]
+}
+
+model LedgerEntry {
+  id        String          @id @default(cuid())
+  walletId  String
+  wallet    Wallet          @relation(fields: [walletId], references: [id])
+  type      LedgerEntryType
+  amount    Int             // credits delta (+/-)
+  refType   String?         // e.g., stripe_payment, order, dispute
+  refId     String?
+  meta      Json?
+  createdAt DateTime        @default(now())
+
+  @@index([walletId, createdAt])
+  @@index([refType, refId])
+}
+
+model RulesVersion {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  name      String
+  rules     Json
+  createdAt DateTime @default(now())
+}
+
+model PricingVersion {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  name      String
+  pricing   Json
+  createdAt DateTime @default(now())
+}
+
+model Order {
+  id                String       @id @default(cuid())
+  userId            String
+  user              User         @relation(fields: [userId], references: [id])
+  status            OrderStatus  @default(CREATED)
+  deliveryType      String       // list_building | mql
+  rulesVersionKey   String
+  pricingVersionKey String
+  meta              Json?
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+
+  emailSequences    EmailSequence[]
+
+  @@index([userId, createdAt])
+  @@index([status])
+}
+
+// Email nurture skeleton
+model EmailSequence {
+  id           String   @id @default(cuid())
+  orderId      String
+  order        Order    @relation(fields: [orderId], references: [id])
+  leadEmail    String
+  status       String   @default("running") // running|paused|canceled|completed|stopped
+  stoppedReason String?
+  createdAt    DateTime @default(now())
+
+  @@index([orderId, createdAt])
+  @@index([leadEmail])
+}
+
+model EmailEvent {
+  id          String   @id @default(cuid())
+  provider    String
+  eventType   String
+  messageId   String?
+  sequenceId  String?
+  leadEmail   String?
+  payload     Json
+  occurredAt  DateTime
+  createdAt   DateTime @default(now())
+
+  @@index([provider, eventType])
+  @@index([messageId])
+  @@index([sequenceId])
+}
