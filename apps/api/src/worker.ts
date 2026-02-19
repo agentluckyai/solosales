@@ -5,17 +5,15 @@ import { redisConnectionOptionsFromUrl } from './redis.connection';
 
 const env = loadEnv();
 
-// eslint-disable-next-line no-console
 console.log(`[worker] starting for queue: ${queueName}`);
 
 const worker = new Worker(
   queueName,
-  async (job) => {
-    // eslint-disable-next-line no-console
+  (job) => {
     console.log(`[worker] job`, {
       name: job.name,
       id: job.id,
-      data: job.data,
+      data: job.data as unknown,
     });
 
     if (job.name === 'ping') {
@@ -30,16 +28,18 @@ const worker = new Worker(
 );
 
 worker.on('failed', (job, err) => {
-  // eslint-disable-next-line no-console
   console.error('[worker] job failed', { id: job?.id, name: job?.name, err });
 });
 
 async function shutdown(signal: string) {
-  // eslint-disable-next-line no-console
   console.log(`[worker] shutting down (${signal})`);
   await Promise.allSettled([worker.close()]);
   process.exit(0);
 }
 
-process.on('SIGINT', () => shutdown('SIGINT'));
-process.on('SIGTERM', () => shutdown('SIGTERM'));
+process.on('SIGINT', () => {
+  void shutdown('SIGINT');
+});
+process.on('SIGTERM', () => {
+  void shutdown('SIGTERM');
+});
