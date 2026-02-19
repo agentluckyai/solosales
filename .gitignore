@@ -14,3 +14,6 @@ packages/db/prisma/*.db
 
 # docker
 infra/.data
+
+# local openclaw state
+.openclaw/
