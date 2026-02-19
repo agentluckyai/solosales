@@ -1,0 +1,28 @@
+schema: spec-driven
+
+context: |
+  Repo: SoloSales (web app + backend monorepo)
+  Language: TypeScript
+  Package manager: pnpm (workspace)
+
+  Known components (verify per change):
+  - Prisma migrations exist
+  - BullMQ queue exists
+  - Docker / docker compose used for local infra
+
+  Engineering constraints:
+  - Prefer boring, stable implementations.
+  - DB changes must include: data-safe migration + rollback plan.
+  - Queue/worker changes must be idempotent (safe to retry).
+  - Cross-platform paths: use Node.js path module; never hardcode separators.
+
+rules:
+  proposal:
+    - Keep it 1–2 pages and decision-oriented.
+    - Always include a short "Non-goals" subsection if there is any ambiguity.
+  specs:
+    - Specify observable behavior and edge cases; avoid implementation details.
+  design:
+    - Must include: data flow, failure cases, and rollback.
+  tasks:
+    - Break down into small, reviewable steps; include verification steps.

@@ -1,0 +1,18 @@
+{
+  "name": "solosales",
+  "private": true,
+  "packageManager": "pnpm@10.29.3",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "pnpm -r dev",
+    "build": "pnpm -r build",
+    "lint": "pnpm -r lint",
+    "format": "pnpm -r format",
+    "db:migrate": "pnpm --filter @solosales/db db:migrate",
+    "db:studio": "pnpm --filter @solosales/db db:studio",
+    "api:dev": "pnpm --filter @solosales/api dev",
+    "worker:dev": "pnpm --filter @solosales/api worker:dev"
+  }
+}

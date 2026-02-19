@@ -1,0 +1,26 @@
+name: OpenSpec Validate
+
+on:
+  pull_request:
+    paths:
+      - 'openspec/**'
+      - '.github/workflows/openspec-validate.yml'
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install openspec-cn
+        run: npm i -g @studyzy/openspec-cn@latest
+
+      - name: Validate all OpenSpec changes/specs
+        run: |
+          openspec-cn --version
+          openspec-cn validate --all
