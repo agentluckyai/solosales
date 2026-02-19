@@ -3,6 +3,7 @@ node_modules
 .DS_Store
 .env
 .env.*
+!.env.example
 dist
 build
 coverage
@@ -14,3 +15,6 @@ packages/db/prisma/*.db
 
 # docker
 infra/.data
+
+# local openclaw state
+.openclaw/

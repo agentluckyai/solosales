@@ -28,7 +28,8 @@ export class HealthController {
       // Redis ping
       const pong = await redis.ping();
       if (pong !== 'PONG') {
-        throw new Error(`Unexpected Redis PING response: ${pong}`);
+        // Types often model this as a literal 'PONG', so template interpolation can become `never`.
+        throw new Error('Unexpected Redis PING response');
       }
 
       return {

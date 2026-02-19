@@ -4,7 +4,11 @@ export class InvalidOrderTransitionError extends Error {
   readonly from: OrderStatus | null;
   readonly to: OrderStatus;
 
-  constructor(args: { from: OrderStatus | null; to: OrderStatus; message?: string }) {
+  constructor(args: {
+    from: OrderStatus | null;
+    to: OrderStatus;
+    message?: string;
+  }) {
     super(
       args.message ??
         `Invalid order status transition: ${args.from ?? '∅'} -> ${args.to}`,
@@ -29,11 +33,25 @@ const ALLOWED: Readonly<Record<OrderStatus, readonly OrderStatus[]>> = {
   QUALIFIED_LIST: ['DELIVERED', 'PAUSED', 'FAILED'],
   DELIVERED: ['CLOSED', 'PAUSED'],
   CLOSED: [],
-  PAUSED: ['PLANNED', 'MINING', 'ENRICHMENT', 'NURTURE', 'INITIAL_LIST', 'SCORING', 'QUALITY_GATE', 'QUALIFIED_LIST', 'DELIVERED', 'FAILED'],
+  PAUSED: [
+    'PLANNED',
+    'MINING',
+    'ENRICHMENT',
+    'NURTURE',
+    'INITIAL_LIST',
+    'SCORING',
+    'QUALITY_GATE',
+    'QUALIFIED_LIST',
+    'DELIVERED',
+    'FAILED',
+  ],
   FAILED: [],
 };
 
-export function canTransitionOrderStatus(from: OrderStatus, to: OrderStatus): boolean {
+export function canTransitionOrderStatus(
+  from: OrderStatus,
+  to: OrderStatus,
+): boolean {
   if (from === to) return true;
   return (ALLOWED[from] ?? []).includes(to);
 }

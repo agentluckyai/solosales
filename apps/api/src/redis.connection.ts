@@ -1,6 +1,8 @@
 import type { ConnectionOptions } from 'bullmq';
 
-export function redisConnectionOptionsFromUrl(redisUrl: string): ConnectionOptions {
+export function redisConnectionOptionsFromUrl(
+  redisUrl: string,
+): ConnectionOptions {
   const url = new URL(redisUrl);
 
   const port = url.port ? Number(url.port) : 6379;

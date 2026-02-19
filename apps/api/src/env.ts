@@ -16,7 +16,6 @@ export type Env = z.infer<typeof envSchema>;
 export function loadEnv(): Env {
   const parsed = envSchema.safeParse(process.env);
   if (!parsed.success) {
-    // eslint-disable-next-line no-console
     console.error(parsed.error.flatten().fieldErrors);
     throw new Error('Invalid environment variables');
   }
