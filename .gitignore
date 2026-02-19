@@ -1,9 +1,16 @@
-.DS_Store
 node_modules
+.pnpm-store
+.DS_Store
+.env
+.env.*
 dist
 build
 coverage
-.next
-.env
-.env.*
 *.log
+
+# prisma
+packages/db/prisma/dev.db
+packages/db/prisma/*.db
+
+# docker
+infra/.data
