@@ -14,6 +14,12 @@
     "db:studio": "pnpm --filter @solosales/db db:studio",
     "api:dev": "pnpm --filter @solosales/api dev",
     "worker:dev": "pnpm --filter @solosales/api worker:dev",
-    "db:generate": "pnpm -C packages/db exec prisma generate"
+    "db:generate": "pnpm -C packages/db exec prisma generate",
+
+    "openspec:version": "openspec-cn --version",
+    "openspec:validate": "openspec-cn validate --all"
+  },
+  "devDependencies": {
+    "@studyzy/openspec-cn": "^1.0.0"
   }
 }

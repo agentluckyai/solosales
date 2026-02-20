@@ -6,6 +6,7 @@ onlyBuiltDependencies:
   - '@nestjs/core'
   - '@prisma/client'
   - '@prisma/engines'
+  - '@studyzy/openspec-cn'
   - esbuild
   - msgpackr-extract
   - prisma
