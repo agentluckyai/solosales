@@ -1,8 +1,8 @@
 # Tasks — m0-wallet-ledger-v1
 
 ## Definition of Ready (must be true before coder writes code)
-- [ ] proposal.md/design.md/tasks.md complete
-- [ ] `openspec-cn validate m0-wallet-ledger-v1` is ✅
+- [ ] proposal.md/design.md/tasks.md complete (including spec 1.1 credits model details)
+- [ ] `pnpm openspec:validate` (or `openspec-cn validate m0-wallet-ledger-v1`) is ✅
 - [ ] Owners assigned for each task section
 
 ## 1) Spec delta (owner: pm)
